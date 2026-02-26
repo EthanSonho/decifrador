@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Decifrador Cemitério</title>
+    <style>
+        body { background: #1a1a1a; color: #00ff00; font-family: 'Courier New', monospace; padding: 20px; text-align: center; }
+        .container { border: 1px solid #00ff00; padding: 20px; display: inline-block; border-radius: 10px; background: #000; }
+        input, button { background: #222; color: #00ff00; border: 1px solid #00ff00; padding: 10px; margin: 5px; width: 80%; }
+        button:hover { background: #00ff00; color: #000; cursor: pointer; }
+        #resultado { margin-top: 20px; font-weight: bold; font-size: 1.2em; color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>SISTEMA DE CRIPTOGRAFIA</h2>
+        <input type="text" id="chave" placeholder="CHAVE (EX: CEMITERIO)" value="CEMITERIO">
+        <input type="text" id="entrada" placeholder="NÚMEROS OU TEXTO">
+        <br>
+        <button onclick="processar(true)">CODIFICAR TEXTO</button>
+        <button onclick="processar(false)">DECIFRAR NÚMEROS</button>
+        <div id="resultado"></div>
+    </div>
+
+    <script>
+        function processar(isCodificar) {
+            let chave = document.getElementById('chave').value.toUpperCase();
+            let entrada = document.getElementById('entrada').value;
+            let resDiv = document.getElementById('resultado');
+            let resultado = "";
+
+            if (isCodificar) {
+                let msg = entrada.toUpperCase().replace(/\s/g, '');
+                let nums = [];
+                for (let i = 0; i < msg.length; i++) {
+                    let posLetra = msg.charCodeAt(i) - 64;
+                    let posChave = chave.charCodeAt(i % chave.length) - 64;
+                    let disfarce = Math.floor(Math.random() * 3) * 26;
+                    nums.push(posLetra + posChave + disfarce);
+                }
+                resultado = nums.join(" ");
+            } else {
+                let nums = entrada.split(" ").map(Number);
+                for (let i = 0; i < nums.length; i++) {
+                    let posChave = chave.charCodeAt(i % chave.length) - 64;
+                    let posOrig = (nums[i] - posChave) % 26;
+                    if (posOrig <= 0) posOrig += 26;
+                    resultado += String.fromCharCode(posOrig + 64);
+                }
+            }
+            resDiv.innerText = "RESULTADO: " + resultado;
+        }
+    </script>
+</body>
+</html>
